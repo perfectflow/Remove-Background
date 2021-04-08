@@ -38,6 +38,7 @@ function create() {
             <ul>
                 <li><h3><a href="#api-key" id="btn-api-key">Enter API Key</a></h3></li>
                 <li><h3><a href="https://mighty.tools">Learn more</a></h3></li>
+                <li><h3><a href="https://remove.bg">Remove.bg</a></h3></li>
             </ul>
         </div>
         `;
@@ -77,7 +78,6 @@ function create() {
             <form>
                 <input name="apiKey" type="text" value="`+apiKey+`" placeholder="Enter API Key" maxlength="30" width="100%" />
             </form>
-            <br/>
             <p>If you don't have an API key, get one from <a href="https://www.remove.bg">www.remove.bg</a>.</p>
         `, 300);
     });
@@ -141,12 +141,12 @@ async function update() {
 function removeBG(url, postData) {
     return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
-        console.log("request");
+        // console.log("request");
         xhr.onload = () => {
             if (xhr.status === 200) {
-                console.log("200");
+                // console.log("200");
                 try {
-                    console.log("resolving");
+                    // console.log("resolving");
                     resolve(xhr.response.data.result_b64);
                 }catch (err) {
                     reject(`Couldn't parse response. ${err.message}, ${xhr.response}`);
@@ -154,7 +154,7 @@ function removeBG(url, postData) {
             }else if(xhr.status === 402){
                 reject('Insufficient credits. Go to <a href="https://www.remove.bg">www.remove.bg</a> and buy more.')
             }else if(xhr.status === 403){
-                reject('Authentication failed. Make sure you have entered a valid API key.')
+                reject('Authentication failed. Make sure you have entered a valid API key. <br/><br/> There is "Enter API Key" button at the bottom of the plugin\'s panel.')
             }else{
                 reject(`${xhr.response.errors[0].title} Error code ${xhr.status}.`);
             }
