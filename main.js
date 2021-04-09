@@ -48,10 +48,9 @@ function create() {
 
     panel.querySelector("#btn-primary").addEventListener("click", async function(){
         const btnPrimary = this;
-        btnPrimary.setAttribute("disabled");
-        btnPrimary.textContent = waitBtnLabel;
-        
         editDocument({ editLabel: "Remove Background" }, async function () {
+            btnPrimary.setAttribute("disabled");
+            btnPrimary.textContent = waitBtnLabel;
             let images = document.querySelector("#images");
             let postData = new FormData();
             postData.append('image_file_b64', images.children[0].src.match(/,(.*)$/)[1]);
@@ -66,10 +65,9 @@ function create() {
                 selection.items[0].fill = fill;
                 selection.items = null; 
             }
+            btnPrimary.textContent = primaryBtnLabel;
+            btnPrimary.removeAttribute("disabled");
         });
-        
-        btnPrimary.textContent = primaryBtnLabel;
-        btnPrimary.removeAttribute("disabled");
     });
 
     panel.querySelector("#btn-api-key").addEventListener("click", async function(){
@@ -151,10 +149,12 @@ function removeBG(url, postData) {
                 }catch (err) {
                     reject(`Couldn't parse response. ${err.message}, ${xhr.response}`);
                 }
+            }else if(xhr.status === 400){
+                reject('This image is too complex for the AI to process. Try using a smaller image of person, animal or product.<br/><br/>Go to <a href="https://www.remove.bg">www.remove.bg</a> to learn more.');
             }else if(xhr.status === 402){
-                reject('Insufficient credits. Go to <a href="https://www.remove.bg">www.remove.bg</a> and buy more.')
+                reject('Insufficient credits. Go to <a href="https://www.remove.bg">www.remove.bg</a> and buy more.');
             }else if(xhr.status === 403){
-                reject('Authentication failed. Make sure you have entered a valid API key. <br/><br/> There is "Enter API Key" button at the bottom of the plugin\'s panel.')
+                reject('Authentication failed. Make sure you have entered a valid API key. <br/><br/> There is "Enter API Key" button at the bottom of the plugin\'s panel.');
             }else{
                 reject(`${xhr.response.errors[0].title} Error code ${xhr.status}.`);
             }
